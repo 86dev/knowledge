@@ -24,7 +24,7 @@
 | `@property-read [Type] [name] [<description>]` ||The @property-read tag allows a class to know which ‘magic’ properties are present that are read-only: a class contains the __get() magic method and allows for specific names that are not covered in a __set() magic method.|
 | `@property-write [Type] [name] [<description>]` ||The @property-write tag allows a class to know which ‘magic’ properties are present that are write-only: a class contains the __set() magic method and allows for specific names that are not covered in a __get() magic method.|
 | `@return [Type] [<description>]` ||The @return tag is used to document the return value of functions or methods.|
-| `@see [URI | FQSEN] [<description>]`<br/>`{@see [URI | FQSEN] [<description>]}` ||The @see tag indicates a reference from the associated Structural Elements to a website or other Structural Elements.|
+| `@see [URI \| FQSEN] [<description>]`<br/>`{@see [URI \| FQSEN] [<description>]}` ||The @see tag indicates a reference from the associated Structural Elements to a website or other Structural Elements.|
 | `@since [version] [<description>]` |<span style="background-color:#fa0;font-weight:bold;padding:4px 10px;">Experimental</span>|The @since tag indicates at which version did the associated Structural Elements became available.|
 | `@source [<start-line> [<number-of-lines>] ] [<description>]` |<span style="background-color:#fa0;font-weight:bold;padding:4px 10px;">Experimental</span>|The @source tag shows the source code of Structural Elements.|
 | `@subpackage [name]` |<span style="color:#fff;background-color:#0ff;font-weight:bold;padding:4px 10px;">Deprecated</span>|The @subpackage tag is used to categorize Structural Elements into logical subdivisions.|
