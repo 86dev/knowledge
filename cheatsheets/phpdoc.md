@@ -34,14 +34,29 @@
 
 > **FQS(E)N**: Fully Qualified Structural (Element) Name
 
-**Type**: It could be:
-
+## Type
+A Type could be:
 * a standard PHP type (`int`, `bool`, `float`, `object`, `array`, `callable`, `mixed`, ...),
 * a FQSN,
 * an array of the above by appending `[]`,
 * or even a specific value (`null`, `true`, `false`, `-1`, ...)
 
 You can stipulate multiple Type by separating them with a pipe `|`
+
+## Inline tag
+Some tags can be used inside other tags in their description part by surrounding them with curly braces `{}`
+* `@example`
+* `@inheritdoc` (only inline)
+* `@internal`
+* `@link`
+* `@see`
+
+```php
+/**
+ * Element description {@link https://company.com}
+ * @deprecated 2.0.0 Use {@see AntoherElement} instead
+ */
+```
 
 ## Exemples
 
@@ -114,7 +129,7 @@ class Foo inherits Base
     /**
      * Old deprecated function description
      *
-     * @deprecated   1.3.0    Use Foo::foo() instead
+     * @deprecated   1.3.0    Use {@see Foo::foo()} instead
      * @version      1.2.5
      * @since        1.0.0
      */
