@@ -7,14 +7,14 @@
 * **DEPRECATED** `@category [description]`<br/>The @category tag is used to organize groups of packages together.
 * `@copyright [description]`<br/>The @copyright tag is used to document the copyright information for Structural elements.
 * `@deprecated [<version>] [<description>]`<br/>The @deprecated tag is used to indicate which Structural elements are deprecated and are to be removed in a future version.
-* **EXPERIMENTAL** `@example [location] [<start-line> [<number-of-lines>] ] [<description>]` or `{@example [location] [<start-line> [<number-of-lines>] ] [<description>]}`<br/>The @example tag shows the code of a specified example file, or optionally, just a portion of it.
+* **EXPERIMENTAL** `@example [location] [<start-line> [<number-of-lines>] ] [<description>]`<br/>`{@example [location] [<start-line> [<number-of-lines>] ] [<description>]}`<br/>The @example tag shows the code of a specified example file, or optionally, just a portion of it.
 * `@filesource`<br/>The @filesource tag is used to tell phpDocumentor to include the source of the current file in the parsing results.
 * `@global [Type] [name] [description]`<br/>The @global tag is used to inform phpDocumentor of a global variable _or_ its usage.
 * `@ignore [<description>]`<br/>The @ignore tag is used to tell phpDocumentor that Structural Elements are not to be processed by phpDocumentor.
 * `{@inheritdoc}`<br/>The @inheritdoc inline tag is used to fetch the documentation from the inherited parent.
-* `@internal [description]` or `{@internal [description]}`<br/>The @internal tag is used to denote that associated Structural Elements are elements internal to this application or library. It may also be used inside a long description to insert a piece of text that is only applicable for the developers of this software.
+* `@internal [description]`<br/>`{@internal [description]}`<br/>The @internal tag is used to denote that associated Structural Elements are elements internal to this application or library. It may also be used inside a long description to insert a piece of text that is only applicable for the developers of this software.
 * `@license [<url>] [name]`<br/>The @license tag is used to indicate which license is applicable for the associated Structural Elements.
-* `@link [URI] [<description>]` or `{@link [URI] [<description>]}`<br/>The @link tag indicates a custom relation between associated Structural Elements and a website, which is identified by an absolute URI.
+* `@link [URI] [<description>]`<br/>`{@link [URI] [<description>]}`<br/>The @link tag indicates a custom relation between associated Structural Elements and a website, which is identified by an absolute URI.
 * `@method [return type] [name]([[type] [parameter]<, …>]) [<description>]`<br/>The @method allows a class to know which ‘magic’ methods are callable.
 * `@package [level 1]\[level 2]\[etc.]`<br/>The @package tag is used to categorize Structural Elements into logical subdivisions.
 * `@param [Type] [name] [<description>]`<br/>The @param tag is used to document a single argument of a function or method.
@@ -28,7 +28,7 @@
 * **DEPRECATED** `@subpackage [name]`<br/>The @subpackage tag is used to categorize Structural Elements into logical subdivisions.
 * `@throws [Type] [<description>]`<br/>The @throws tag is used to indicate whether Structural Elements could throw a specific type of exception.
 * `@todo [description]`<br/>The @todo tag is used to indicate whether any development activities should still be executed on associated Structural Elements.
-* `@uses [FQSEN] [<description>]` or `@used-by [FQSEN] [<description>]`<br/>The @uses tag indicates a reference to (and from) a single associated Structural Elements.
+* `@uses [FQSEN] [<description>]`<br/>`@used-by [FQSEN] [<description>]`<br/>The @uses tag indicates a reference to (and from) a single associated Structural Elements.
 * `@var [“Type”] [$element_name] [<description>]`<br/>You may use the @var tag to document the “Type” of properties, sometimes called class variables.
 * `@version [<vector>] [<description>]`<br/>The @version tag indicates the current version of Structural Elements.
 
