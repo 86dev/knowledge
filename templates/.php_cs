@@ -1,12 +1,19 @@
 <?php
 /**
  * PHP_CS_Fixer configuration file template
+ * Uncomment a rule to activate it
+ * If you use a predefined set and want to remove a rule, uncomment the rule and set if to false
  * @link https://github.com/FriendsOfPHP/PHP-CS-Fixer
  */
 
 return PhpCsFixer\Config::create()
 	->setRules([
-		'@PSR2' => true,
+		/** List of predefined sets of rules */
+		// '@DoctrineAnnotation' => true,
+		// '@Symfony' => true,
+		// '@PhpCsFixer' => true,
+		// '@PSR1' => true,
+		// '@PSR2' => true,
 		/** align_multiline_comment
 		 * Each line of multi-line DocComments must have an asterisk [PSR-5] and must be aligned with the first one.
 		 * Configuration options:
