@@ -12,24 +12,32 @@ Param (
 
 Set-Location $Path
 
-$dirs = ,$(Get-Item $Path) + $(Get-ChildItem -Directory)
+$dirs = ,$(Get-Item $Path) +
+	$(Get-Item "$Path\_DsiOne") + $(Get-ChildItem "$Path\_DsiOne" -Directory) +
+	$(Get-Item "$Path\_Oricom") + $(Get-ChildItem "$Path\_Oricom" -Directory) +
+	$(Get-Item "$Path\_lib") + $(Get-ChildItem "$Path\_lib" -Directory) +
+	$(Get-ChildItem $Path -Directory)
 $result = @()
 for ($i = 0; $i -lt $dirs.Length; $i++)
 {
 	$dir = $dirs[$i]
 	$pct = ($i + 1) / $dirs.Length * 100
-	Write-Progress -Activity "Checking git for $($dir.Name)" -PercentComplete $pct -CurrentOperation "Init"
+	$dirName = $dir.Name
+	$parent = Split-Path (Split-Path $dir.FullName -Parent) -Leaf
+	if ($parent -ne "dev") { $dirName = "$parent/$dirName" }
+
+	Write-Progress -Activity "Checking git for $($dirName)" -PercentComplete $pct -CurrentOperation "Init"
 	if (Test-Path "$($dir.FullName)\.git")
 	{
-		Write-Progress -Activity "Checking git for $($dir.Name)" -PercentComplete $pct -CurrentOperation "Fetching ..."
+		Write-Progress -Activity "Checking git for $($dirName)" -PercentComplete $pct -CurrentOperation "Fetching ..."
 		Set-Location $dir.FullName
 		git fetch
-		Write-Progress -Activity "Checking git for $($dir.Name)" -PercentComplete $pct -CurrentOperation "Analyzing ..."
+		Write-Progress -Activity "Checking git for $($dirName)" -PercentComplete $pct -CurrentOperation "Analyzing ..."
 		$status = git status -sb --porcelain=v2 | Out-String
 		$status -match 'branch.ab \+(?<ahead>\d+) -(?<behind>\d+)' >$null 2>&1
 		$branch = $Matches
 		$changes = @($status -split '\n' | ForEach-Object -process { $_ -match '^(?:\d+|\?)' } | Where-Object { $_ -match "True" })
-		$properties = [ordered]@{ Project = $dir.Name; Ahead = "+" + $branch.ahead; Behind = "-" + $branch.behind; Changes = $changes.Count; Action = "" }
+		$properties = [ordered]@{ Project = $dirName; Ahead = "+" + $branch.ahead; Behind = "-" + $branch.behind; Changes = $changes.Count; Action = "" }
 		if ($branch.behind -gt 0 -and ($branch.ahead -gt 0 -or $changes.Count -gt 0)) { $properties.Action = "conflict" }
 		elseif ($changes.Count -gt 0) { $properties.Action = 'commit' }
 		elseif ($branch.Ahead -gt 0) { $properties.Action = 'push' }
