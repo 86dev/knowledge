@@ -12,26 +12,32 @@ Param (
 
 Set-Location $Path
 
-$dirs = ,$(Get-Item $Path) +
-	$(Get-Item "$Path\_DsiOne") + $(Get-ChildItem "$Path\_DsiOne" -Directory) +
-	$(Get-Item "$Path\_Oricom") + $(Get-ChildItem "$Path\_Oricom" -Directory) +
-	$(Get-Item "$Path\_lib") + $(Get-ChildItem "$Path\_lib" -Directory) +
-	$(Get-ChildItem $Path -Directory)
+# $dirs = ,$(Get-Item $Path) +
+# 	$(Get-Item "$Path\_DsiOne") + $(Get-ChildItem "$Path\_DsiOne" -Directory) +
+# 	$(Get-Item "$Path\_Oricom") + $(Get-ChildItem "$Path\_Oricom" -Directory) +
+# 	$(Get-Item "$Path\_lib") + $(Get-ChildItem "$Path\_lib" -Directory) +
+# 	$(Get-ChildItem $Path -Directory -Recurse)
+Write-Progress -Activity "Looking for .git folders" -PercentComplete 0 -CurrentOperation "Init"
+$dirs = Get-ChildItem -Path . -Include .git -Directory -Hidden -Recurse -PipelineVariable d `
+	| Where-Object {$d.FullName -notlike "*vendor*"} `
+	| ForEach-Object {$_.Parent}
 $result = @()
 for ($i = 0; $i -lt $dirs.Length; $i++)
 {
+	Set-Location $Path
 	$dir = $dirs[$i]
 	$pct = ($i + 1) / $dirs.Length * 100
-	$dirName = $dir.Name
-	$parent = Split-Path (Split-Path $dir.FullName -Parent) -Leaf
-	if ($parent -ne "dev") { $dirName = "$parent/$dirName" }
+	$dirName = Resolve-Path $dir.FullName -Relative
+	# $dirName = $dir.Name
+	# $parent = Split-Path (Split-Path $dir.FullName -Parent) -Leaf
+	# if ($parent -ne "dev") { $dirName = "$parent/$dirName" }
 
 	Write-Progress -Activity "Checking git for $($dirName)" -PercentComplete $pct -CurrentOperation "Init"
 	if (Test-Path "$($dir.FullName)\.git")
 	{
 		Write-Progress -Activity "Checking git for $($dirName)" -PercentComplete $pct -CurrentOperation "Fetching ..."
 		Set-Location $dir.FullName
-		git fetch
+		git fetch >$null
 		Write-Progress -Activity "Checking git for $($dirName)" -PercentComplete $pct -CurrentOperation "Analyzing ..."
 		$status = git status -sb --porcelain=v2 | Out-String
 		$status -match 'branch.ab \+(?<ahead>\d+) -(?<behind>\d+)' >$null 2>&1
