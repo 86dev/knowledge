@@ -1,3 +1,14 @@
+$project = (Get-Item .).Name
+
+$default_db_host = "localhost"
+$default_db_user = "root"
+$default_db_prefix = "wp_"
+$default_admin = "jtisseau"
+$default_amdin_email = "jonathan.tisseau@86dev.fr"
+$default_locale = "fr_FR"
+$default_url = "https://$project.localhost/"
+$default_git = "https://github.com/jonathantisseau/$project.git"
+
 function Write-Title($text) {
 	Write-Host ""
 	Write-Host "================================================================================"
@@ -33,15 +44,13 @@ function plugin_activate($name) {
 	}
 }
 
-$project = (Get-Item .).Name
-
 Write-Host "Project $project"
 Write-Title "Creating database..."
 mysql --user=root --password=***REMOVED*** -e "CREATE DATABASE IF NOT EXISTS $project COLLATE 'utf8_general_ci';" 2> $null
 
 Write-Title "Downloading WP..."
 if (!(Test-Path "./wp-settings.php")) {
-	$locale = Read-Default "	Locale (default 'fr_FR')" "fr_FR"
+	$locale = Read-Default "	Locale (default '$default_locale')" $default_locale
 	wp core download --locale=$locale
 	if ($?) {
 		Write-Host "	WP has been downloaded" -ForegroundColor green
@@ -55,11 +64,11 @@ if (!(Test-Path "./wp-settings.php")) {
 
 Write-Title "Configuring WP..."
 if (!(Test-Path "./wp-config.php")) {
-	$server = Read-Default "	DB Server (default 'localhost')" "localhost"
-	$user = Read-Default "	DB User (default 'root')" "root"
+	$server = Read-Default "	DB Server (default '$default_db_host')" $default_db_host
+	$user = Read-Default "	DB User (default '$default_db_user')" $default_db_user
 	$password = Read-Host "	DB Password"
 	$db = Read-Default "	Database (default '$project')" $project
-	$prefix = Read-Default "	Prefix (default 'wp_')" "wp_"
+	$prefix = Read-Default "	Prefix (default '$default_db_prefix')" $default_db_prefix
 
 	$php = "define('WP_DEBUG', false);
 define('WP_DEBUG_DISPLAY', false);
@@ -82,9 +91,9 @@ wp core is-installed --quiet
 $is_installed = $?
 if (!$is_installed) {
 	$multisite = Read-Default "	Multisite ? (y/n, default n)" "n"
-	$url = Read-Default "	URL (default 'https://$project.localhost/')" "https://$project.localhost/"
-	$login = Read-Default "	Admin Login (default 'jtisseau')" "jtisseau"
-	$email = Read-Default "	Admin Email (default 'jonathan.tisseau@86dev.fr')" "jonathan.tisseau@86dev.fr"
+	$url = Read-Default "	URL (default '$default_url')" $default_url
+	$login = Read-Default "	Admin Login (default '$default_admin')" $default_admin
+	$email = Read-Default "	Admin Email (default '$default_amdin_email')" $default_amdin_email
 	$password = Read-Host "	Admin Password"
 	if ($multisite -eq "y") {
 		$subdomains = Read-Default "	Use subdomains ? (y/n, default y)" "y"
@@ -151,10 +160,16 @@ Write-Title "Adding .gitignore..."
 if (!(Test-Path "./.gitignore")) {
 	New-Item -Path . -Name ".gitignore" -ItemType "file" -ErrorAction SilentlyContinue -Value "# Ignore everything in the root except the wp-content directory.
 /*
-*.lock
-!.htaccess
+!.editorconfig
 !.gitignore
-!.vs-code
+!package.json
+!package.lock
+!rollup.config.js
+!tsconfig.json
+!tslint.json
+!wp_generators.json
+!.vscode/
+!src/
 !wp-content/
 
 # Ignore everything in the wp-content directory, except the plugins and themes directories.
@@ -183,7 +198,7 @@ wp-content/themes/$project/node_modules/*"
 
 Write-Title "Adding git support..."
 if (!(Test-Path("./.git"))) {
-	$git_url = Read-Default "Git url (default https://github.com/jonathantisseau/$project.git)" "https://github.com/jonathantisseau/$project.git"
+	$git_url = Read-Default "Git url (default $default_git)" $default_git
 	git init
 	git remote add origin $git_url
 
