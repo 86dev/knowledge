@@ -1,17 +1,30 @@
 $project = (Get-Item .).Name
 
+# Default WP database host
 $default_db_host = "localhost"
+# Default WP database login
 $default_db_user = "root"
+# Default WP database prefix
 $default_db_prefix = "wp_"
+# Default WP admin user login
 $default_admin = "jtisseau"
-$default_amdin_email = "jonathan.tisseau@86dev.fr"
+# Default WP admin user email
+$default_admin_email = "jonathan.tisseau@86dev.fr"
+# Default WP locale
 $default_locale = "fr_FR"
+# Default local website URL
 $default_url = "https://$project.localhost/"
+# Default Git URL
 $default_git = "https://github.com/86dev/$project.git"
 
+# Path where the alias will be saved
 $alias_path = "C:/wamp64/alias"
+# Path to the apache directory for the alias configuration
 $apache_path = "C:/wamp64/bin/apache/apache2.4.33"
+# Name of the apache service that will be restarted if a new alias is created
 $apache_service = "wampapache64"
+# Path to themes and plugins that can't be downloaded. They must be arranged like in a WP directory
+$source_path = "e:/dev/base"
 
 function Write-Title($text) {
 	Write-Host ""
@@ -97,7 +110,7 @@ if (!$is_installed) {
 	$multisite = Read-Default "	Multisite ? (y/n, default n)" "n"
 	$url = Read-Default "	URL (default '$default_url')" $default_url
 	$login = Read-Default "	Admin Login (default '$default_admin')" $default_admin
-	$email = Read-Default "	Admin Email (default '$default_amdin_email')" $default_amdin_email
+	$email = Read-Default "	Admin Email (default '$default_admin_email')" $default_admin_email
 	$password = Read-Host "	Admin Password"
 	if ($multisite -eq "y") {
 		$subdomains = Read-Default "	Use subdomains ? (y/n, default y)" "y"
@@ -120,23 +133,29 @@ if (!$is_installed) {
 }
 
 Write-Title "Preparing themes..."
-Copy-Item -Destination "./wp-content/themes/Avada" -Path "e:/dev/base/wp-content/themes/Avada" -Recurse -ErrorAction SilentlyContinue
-Copy-Item -Destination "./wp-content/themes/Avada-Child-Theme" -Path "e:/dev/base/wp-content/themes/Avada-Child-Theme" -Recurse -ErrorAction SilentlyContinue
-wp theme activate Avada-Child-Theme --quiet
-if ($?) {
-	Write-Host "	Avada-Child-Theme has been activated" -ForegroundColor green
+$use_avada = Read-Default "	Use Avada (y/n, default y)" "y"
+if ($use_avada -eq "y") {
+	Copy-Item -Destination "./wp-content/themes/Avada" -Path "$source_path/wp-content/themes/Avada" -Recurse -ErrorAction SilentlyContinue
+	Copy-Item -Destination "./wp-content/themes/Avada-Child-Theme" -Path "$source_path/wp-content/themes/Avada-Child-Theme" -Recurse -ErrorAction SilentlyContinue
+	wp theme activate Avada-Child-Theme --quiet
+	if ($?) {
+		Write-Host "	Avada-Child-Theme has been activated" -ForegroundColor green
+	} else {
+		Write-Host "	Avada-Child-Theme has NOT been activated" -ForegroundColor red
+	}
+	wp theme update Avada --quiet
+	if ($?) {
+		Write-Host "	Avada is up-to-date" -ForegroundColor green
+	} else {
+		Write-Host "	Avada is NOT up-to-date" -ForegroundColor red
+	}
+	Remove-Item "./wp-content/themes/twentysixteen" -Recurse -ErrorAction SilentlyContinue
+	Remove-Item "./wp-content/themes/twentyseventeen" -Recurse -ErrorAction SilentlyContinue
+	Remove-Item "./wp-content/themes/twentytwenty" -Recurse -ErrorAction SilentlyContinue
+	Write-Host "	Themes prepared"
 } else {
-	Write-Host "	Avada-Child-Theme has NOT been activated" -ForegroundColor red
+	Write-Host "	Themes unchanged"
 }
-wp theme update Avada --quiet
-if ($?) {
-	Write-Host "	Avada is up-to-date" -ForegroundColor green
-} else {
-	Write-Host "	Avada is NOT up-to-date" -ForegroundColor red
-}
-Remove-Item "./wp-content/themes/twentysixteen" -Recurse -ErrorAction SilentlyContinue
-Remove-Item "./wp-content/themes/twentyseventeen" -Recurse -ErrorAction SilentlyContinue
-Remove-Item "./wp-content/themes/twentytwenty" -Recurse -ErrorAction SilentlyContinue
 Write-Host "	Themes prepared"
 
 Write-Title "Preparing plugins..."
