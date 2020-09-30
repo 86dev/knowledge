@@ -7,7 +7,11 @@ $default_admin = "jtisseau"
 $default_amdin_email = "jonathan.tisseau@86dev.fr"
 $default_locale = "fr_FR"
 $default_url = "https://$project.localhost/"
-$default_git = "https://github.com/jonathantisseau/$project.git"
+$default_git = "https://github.com/86dev/$project.git"
+
+$alias_path = "C:/wamp64/alias"
+$apache_path = "C:/wamp64/bin/apache/apache2.4.33"
+$apache_service = "wampapache64"
 
 function Write-Title($text) {
 	Write-Host ""
@@ -208,8 +212,8 @@ if (!(Test-Path("./.git"))) {
 }
 
 Write-Title "Adding alias..."
-if (!(Test-Path("C:/wamp64/alias/$project.conf"))) {
-	New-Item -Path "C:/wamp64/alias" -Force -Name "$project.conf" -ItemType File -ErrorAction SilentlyContinue -Value "Alias /$project `"$(Get-Location)/`"
+if (!(Test-Path("$alias_path/$project.conf"))) {
+	New-Item -Path $alias_path -Force -Name "$project.conf" -ItemType File -ErrorAction SilentlyContinue -Value "Alias /$project `"$(Get-Location)/`"
 
 <Directory `"$(Get-Location)`">
 	Options Indexes FollowSymLinks MultiViews
@@ -247,13 +251,13 @@ if (!(Test-Path("C:/wamp64/alias/$project.conf"))) {
 
 	SSLEngine on
 
-	SSLCertificateFile `"C:/wamp64/bin/apache/apache2.4.23/conf/cert/certificat.crt`"
-	SSLCertificateKeyFile `"C:/wamp64/bin/apache/apache2.4.23/conf/cert/private.key`"
+	SSLCertificateFile `"$apache_path/conf/cert/certificat.crt`"
+	SSLCertificateKeyFile `"$apache_path/conf/cert/private.key`"
 
 	<FilesMatch `"\.(cgi|shtml|phtml|php)$`">
 		SSLOptions +StdEnvVars
 	</FilesMatch>
-	<Directory `"C:/wamp64/bin/apache/apache2.4.23/cgi-bin`">
+	<Directory `"$apache_path/cgi-bin`">
 		SSLOptions +StdEnvVars
 	</Directory>
 	BrowserMatch `"MSIE [2-5]`" \
@@ -264,8 +268,8 @@ if (!(Test-Path("C:/wamp64/alias/$project.conf"))) {
 	Write-Host "	Alias has been created" -ForegroundColor green
 
 	Write-Title "Restarting server..."
-	net stop wampapache64 > $null
-	net start wampapache64 > $null
+	net stop $apache_service > $null
+	net start $apache_service > $null
 	Write-Output "	Server has been restarted"
 } else {
 	Write-Host "	Alias has already been created"
