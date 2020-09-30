@@ -134,9 +134,9 @@ if ($?) {
 } else {
 	Write-Host "	Avada is NOT up-to-date" -ForegroundColor red
 }
-Remove-Item "e:/dev/base/wp-content/themes/twentysixteen" -Recurse -ErrorAction SilentlyContinue
-Remove-Item "e:/dev/base/wp-content/themes/twentyseventeen" -Recurse -ErrorAction SilentlyContinue
-Remove-Item "e:/dev/base/wp-content/themes/twentytwenty" -Recurse -ErrorAction SilentlyContinue
+Remove-Item "./wp-content/themes/twentysixteen" -Recurse -ErrorAction SilentlyContinue
+Remove-Item "./wp-content/themes/twentyseventeen" -Recurse -ErrorAction SilentlyContinue
+Remove-Item "./wp-content/themes/twentytwenty" -Recurse -ErrorAction SilentlyContinue
 Write-Host "	Themes prepared"
 
 Write-Title "Preparing plugins..."
