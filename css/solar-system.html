@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Solar System</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		:root {
+			--km: 0.0001px;
+			--au: calc(149597870 * var(--km));
+			--sun-diameter: 109.1;
+			--base-diameter: /*var(--km); */ 5px;
+			--base-year: 100s;
+			--base-day: 1s;
+			--base-distance: /* var(--au); */ 100px;
+			--max-distance: 50;
+		}
+
+		body {
+			height: calc(calc(var(--sun-diameter) * var(--base-diameter) + var(--base-distance) * var(--max-distance)));
+			width: calc(calc(var(--sun-diameter) * var(--base-diameter) + var(--base-distance) * var(--max-distance)));
+			background: #1a1a1a;
+			position: relative;
+		}
+
+		.star {
+			--w: calc(var(--base-diameter) * var(--diameter));
+			background: var(--background);
+			border-radius: 50%;
+			position: absolute;
+			width: var(--w);
+			height: var(--w);
+			top: calc(50% - var(--w) / 2);
+			left: calc(50% - var(--w) / 2);
+		}
+
+		.ellipse {
+			--d: calc(var(--sun-diameter) * var(--base-diameter) + var(--base-distance) * var(--distance));
+			position: absolute;
+			width: var(--d);
+			height: var(--d);
+			top: calc(50% - var(--d) / 2);
+			left: calc(50% - var(--d) / 2);
+			border: 1px solid #ffffff33;
+			border-radius: 50%;
+		}
+
+		#animated:checked ~ .ellipse {
+			animation: rotation calc(var(--base-year) * var(--year)) infinite linear;
+		}
+
+		.planet {
+			--w: calc(var(--base-diameter) * var(--diameter));
+			position: absolute;
+			width: var(--w);
+			height: var(--w);
+			background: var(--background);
+			border-radius: 50%;
+			top: calc(var(--w) / -2);
+			left: 50%;
+		}
+
+		.sun {
+			--diameter: var(--sun-diameter);
+			--year: 1;
+			--day: 1;
+			--background: linear-gradient(45deg, goldenrod, yellow);
+		}
+
+		.mercury {
+			--diameter: .38;
+			--year: .24;
+			--day: 1;
+			--distance: 0.39;
+			--background: lightgray;
+		}
+
+		.venus {
+			--diameter: .95;
+			--year: 0.62;
+			--day: 1;
+			--distance: 0.72;
+			--background: orange;
+		}
+
+		.earth {
+			--diameter: 1;
+			--year: 1;
+			--day: 1;
+			--distance: 1;
+			--background: blue;
+		}
+
+		.mars {
+			--diameter: .53;
+			--year: 1.88;
+			--day: 1;
+			--distance: 1.52;
+			--background: crimson;
+		}
+
+		.jupiter {
+			--diameter: 11.2;
+			--year: 11.9;
+			--day: 1;
+			--distance: 5.2;
+			--background: #b8c5cd;
+		}
+
+		.saturn {
+			--diameter: 9.44;
+			--year: 29.5;
+			--day: 1;
+			--distance: 9.53;
+			--background: #c2b84d;
+		}
+
+		.saturn .planet::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 140%;
+			height: 10px;
+			border: 10px solid white;
+			border-top: 0;
+			border-radius: 50%;
+			transform: translate(-50%, -50%) rotate(30deg);
+		}
+
+		.uranus {
+			--diameter: 4;
+			--year: 84;
+			--day: 7;
+			--distance: 19.19;
+			--background: lightblue;
+		}
+
+		.neptune {
+			--diameter: 3.88;
+			--year: 164.8;
+			--day: 5;
+			--distance: 30.06;
+			--background: #689aea;
+		}
+
+		@keyframes rotation {
+			from {
+				transform: rotate(0);
+			}
+			to {
+				transform: rotate(360deg);
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<input type="checkbox" name="animated" id="animated">
+	<label for="animated">Animation</label>
+	<div class="star sun"></div>
+	<div class="ellipse mercury"><div class="planet"></div></div>
+	<div class="ellipse venus"><div class="planet"></div></div>
+	<div class="ellipse earth">
+		<div class="planet"></div>
+		<div class="ellipse earth-moon">
+			<div class="moon"></div>
+		</div>
+	</div>
+	<div class="ellipse mars"><div class="planet"></div></div>
+	<div class="ellipse jupiter"><div class="planet"></div></div>
+	<div class="ellipse saturn"><div class="planet"></div></div>
+	<div class="ellipse uranus"><div class="planet"></div></div>
+	<div class="ellipse neptune"><div class="planet"></div></div>
+	<div class="ellipse pluto"><div class="exoplanet"></div></div>
+</body>
+
+</html>
