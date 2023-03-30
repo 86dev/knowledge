@@ -210,9 +210,8 @@
 ## Substitution
 |Definition|Regex|
 |-|-:|
-|Complete match contents|`\0`|
-|Contents in capture group 1|`\1`|
-|Contents in capture group 1|`$1`|
+|Complete match contents|`\0` or `$0`|
+|Contents in capture group 1|`\1` or `$1`|
 |Contents in capture group `foo`|`${foo}`|
 |Hexadecimal replacement values|`\x20`|
 |Hexadecimal replacement values|`\x{06fa}`|
