@@ -62,8 +62,21 @@ function plugin_activate($name) {
 }
 
 Write-Host "Project $project"
-Write-Title "Creating database..."
-mysql --user=root --password=***REMOVED*** -e "CREATE DATABASE IF NOT EXISTS $project COLLATE 'utf8_general_ci';" 2> $null
+$db = $project.replace("-", "_")
+Write-Host "Preparing Database..."
+$db = Read-Default "	Database (default '$db')" $db
+$server = Read-Default "	DB Server (default '$default_db_host')" $default_db_host
+$user = Read-Default "	DB User (default '$default_db_user')" $default_db_user
+$prefix = Read-Default "	Prefix (default '$default_db_prefix')" $default_db_prefix
+$password = Read-Host "	DB Password"
+$db_exists = mysql --host=$server --user=$user --password=$password -e "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$db';" 2> $null
+if ($db_exists) {
+	Write-Host "	Database $db already exists" -ForegroundColor green
+} else {
+	Write-Title "Creating database..."
+	mysql --user=$user --password=$password -e "CREATE DATABASE $db COLLATE 'utf8mb4_general_ci';" 2> $null
+	Write-Host "	Database $db created" -ForegroundColor green
+}
 
 Write-Title "Downloading WP..."
 if (!(Test-Path "./wp-settings.php")) {
@@ -81,12 +94,6 @@ if (!(Test-Path "./wp-settings.php")) {
 
 Write-Title "Configuring WP..."
 if (!(Test-Path "./wp-config.php")) {
-	$server = Read-Default "	DB Server (default '$default_db_host')" $default_db_host
-	$user = Read-Default "	DB User (default '$default_db_user')" $default_db_user
-	$password = Read-Host "	DB Password"
-	$db = Read-Default "	Database (default '$project')" $project
-	$prefix = Read-Default "	Prefix (default '$default_db_prefix')" $default_db_prefix
-
 	$php = "define('WP_DEBUG', false);
 define('WP_DEBUG_DISPLAY', false);
 define('WP_DEBUG_LOG', false);
@@ -104,8 +111,7 @@ define('WP_POST_REVISIONS', 10);"
 }
 
 Write-Title "Installing WP..."
-wp core is-installed --quiet
-$is_installed = $?
+$is_installed = mysql --host=$server --user=$user --password=$password -e "SELECT TABLE_NAME FROM TABLES WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '${prefix}users';" 2> $null
 if (!$is_installed) {
 	$multisite = Read-Default "	Multisite ? (y/n, default n)" "n"
 	$url = Read-Default "	URL (default '$default_url')" $default_url
